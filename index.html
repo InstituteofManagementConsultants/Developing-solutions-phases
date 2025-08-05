@@ -21,42 +21,52 @@
       justify-content: center;
       align-items: center;
       height: 100vh;
+      /* Ensure body takes full height for centering */
+      width: 100vw; /* Ensure body takes full width */
+      overflow: hidden; /* Prevent scrolling if content overflows slightly */
     }
 
     .slideshow-container {
       position: relative;
-      max-width: 1000px;
-      width: 100%;
+      max-width: 1000px; /* Maximum width of the slideshow */
+      width: 90%; /* Responsive width, takes 90% of parent width */
       background: white;
       border-radius: 10px;
       box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
       overflow: hidden;
+      display: flex; /* Use flexbox for centering content within */
+      flex-direction: column; /* Stack elements vertically */
+      align-items: center; /* Center horizontally */
+      justify-content: center; /* Center vertically */
     }
 
     .slide {
-      display: none;
-      width: 100%;
+      display: none; /* Hidden by default */
+      width: 100%; /* Take full width of the container */
     }
 
     .slide img {
-      width: 100%;
+      width: 100%; /* Make image responsive to its parent (.slide) */
+      height: auto; /* Maintain aspect ratio */
       display: block;
     }
 
     .nav-button {
       cursor: pointer;
       position: absolute;
-      top: 50%;
+      top: 50%; /* Position vertically in the middle */
+      transform: translateY(-50%); /* Adjust for perfect vertical centering */
       width: auto;
       padding: 12px;
-      margin-top: -22px;
       color: white;
       font-weight: bold;
       font-size: 24px;
       transition: 0.3s ease;
-      border-radius: 0 3px 3px 0;
       user-select: none;
       background-color: var(--dark-blue);
+      border: none; /* Remove default button border */
+      outline: none; /* Remove outline on focus */
+      z-index: 10; /* Ensure buttons are above slides */
     }
 
     .nav-button:hover {
@@ -65,18 +75,21 @@
 
     .prev {
       left: 0;
-      border-radius: 3px 0 0 3px;
+      border-radius: 0 3px 3px 0; /* Rounded corners on the right side */
     }
 
     .next {
       right: 0;
-      border-radius: 0 3px 3px 0;
+      border-radius: 3px 0 0 3px; /* Rounded corners on the left side */
     }
 
     .dots {
       text-align: center;
       padding: 12px 0;
       background-color: var(--light-blue);
+      width: 100%; /* Ensure dots section spans full width */
+      border-bottom-left-radius: 10px; /* Match slideshow container border radius */
+      border-bottom-right-radius: 10px;
     }
 
     .dot {
@@ -85,7 +98,7 @@
       width: 12px;
       margin: 0 4px;
       background-color: #bbb;
-      border-radius: 50%;
+      border-radius: 50%; /* Make dots circular */
       display: inline-block;
       transition: background-color 0.3s ease;
     }
@@ -93,11 +106,41 @@
     .active, .dot:hover {
       background-color: var(--dark-orange);
     }
+
+    /* Media queries for responsiveness */
+    @media (max-width: 768px) {
+      .slideshow-container {
+        width: 95%; /* Slightly more width on smaller screens */
+      }
+      .nav-button {
+        font-size: 18px; /* Smaller font for buttons */
+        padding: 8px; /* Smaller padding */
+      }
+      .dot {
+        height: 10px;
+        width: 10px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .nav-button {
+        font-size: 16px;
+        padding: 6px;
+      }
+      .dots {
+        padding: 8px 0;
+      }
+      .dot {
+        height: 8px;
+        width: 8px;
+      }
+    }
   </style>
 </head>
 <body>
 
 <div class="slideshow-container">
+  <!-- Slides with images -->
   <div class="slide"><img src="Developing-solutions-phases/1.png" alt="Slide 1"></div>
   <div class="slide"><img src="Developing-solutions-phases/2.png" alt="Slide 2"></div>
   <div class="slide"><img src="Developing-solutions-phases/3.png" alt="Slide 3"></div>
@@ -108,49 +151,75 @@
   <div class="slide"><img src="Developing-solutions-phases/8.png" alt="Slide 8"></div>
   <div class="slide"><img src="Developing-solutions-phases/9.png" alt="Slide 9"></div>
 
+  <!-- Navigation buttons -->
   <a class="nav-button prev" onclick="changeSlide(-1)">❮</a>
   <a class="nav-button next" onclick="changeSlide(1)">❯</a>
-</div>
 
-<div class="dots">
-  <span class="dot" onclick="showSlide(1)"></span>
-  <span class="dot" onclick="showSlide(2)"></span>
-  <span class="dot" onclick="showSlide(3)"></span>
-  <span class="dot" onclick="showSlide(4)"></span>
-  <span class="dot" onclick="showSlide(5)"></span>
-  <span class="dot" onclick="showSlide(6)"></span>
-  <span class="dot" onclick="showSlide(7)"></span>
-  <span class="dot" onclick="showSlide(8)"></span>
-  <span class="dot" onclick="showSlide(9)"></span>
+  <!-- Dots for direct slide access -->
+  <div class="dots">
+    <span class="dot" onclick="showSlide(1)"></span>
+    <span class="dot" onclick="showSlide(2)"></span>
+    <span class="dot" onclick="showSlide(3)"></span>
+    <span class="dot" onclick="showSlide(4)"></span>
+    <span class="dot" onclick="showSlide(5)"></span>
+    <span class="dot" onclick="showSlide(6)"></span>
+    <span class="dot" onclick="showSlide(7)"></span>
+    <span class="dot" onclick="showSlide(8)"></span>
+    <span class="dot" onclick="showSlide(9)"></span>
+  </div>
 </div>
 
 <script>
-  let slideIndex = 1;
+  let slideIndex = 1; // Initialize the current slide index to 1
+
+  // Call showSlide to display the first slide when the page loads
   showSlide(slideIndex);
 
+  /**
+   * Changes the current slide by a given number (n).
+   * @param {number} n - The number of slides to change (e.g., -1 for previous, 1 for next).
+   */
   function changeSlide(n) {
-    showSlide(slideIndex += n);
+    showSlide(slideIndex += n); // Increment/decrement slideIndex and show the new slide
   }
 
+  /**
+   * Displays a specific slide based on its index.
+   * Handles wrapping around from the last slide to the first, and vice versa.
+   * @param {number} n - The index of the slide to display (1-based).
+   */
   function showSlide(n) {
-    const slides = document.getElementsByClassName("slide");
-    const dots = document.getElementsByClassName("dot");
+    const slides = document.getElementsByClassName("slide"); // Get all slide elements
+    const dots = document.getElementsByClassName("dot");     // Get all dot elements
 
-    if (n > slides.length) { slideIndex = 1 }
-    if (n < 1) { slideIndex = slides.length }
+    // If the requested slide index is greater than the total number of slides,
+    // reset to the first slide.
+    if (n > slides.length) {
+      slideIndex = 1;
+    }
+    // If the requested slide index is less than 1,
+    // set it to the last slide.
+    if (n < 1) {
+      slideIndex = slides.length;
+    }
 
+    // Hide all slides
     for (let i = 0; i < slides.length; i++) {
       slides[i].style.display = "none";
     }
 
+    // Deactivate all dots
     for (let i = 0; i < dots.length; i++) {
       dots[i].className = dots[i].className.replace(" active", "");
     }
 
-    slides[slideIndex - 1].style.display = "block";
-    dots[slideIndex - 1].className += " active";
+    // Display the current slide and activate the corresponding dot
+    slides[slideIndex - 1].style.display = "block"; // Arrays are 0-indexed, so subtract 1
+    dots[slideIndex - 1].className += " active";     // Add 'active' class to the current dot
   }
 </script>
 
 </body>
 </html>
+
+
